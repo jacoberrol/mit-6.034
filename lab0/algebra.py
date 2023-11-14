@@ -77,9 +77,11 @@ class Sum(list, Expression):
         """
         terms = self.flatten()
         if len(terms) == 1:
-            return simplify_if_possible(terms[0])
+            rv = simplify_if_possible(terms[0])
         else:
-            return Sum([simplify_if_possible(term) for term in terms]).flatten()
+            rv = Sum([simplify_if_possible(term) for term in terms]).flatten()
+
+        return rv
 
     def flatten(self):
         """Simplifies nested sums."""
@@ -116,7 +118,8 @@ class Product(list, Expression):
         result = Product([1])
         for factor in factors:
             result = multiply(result, simplify_if_possible(factor))
-        return result.flatten()
+        rv = result.flatten()
+        return rv
 
     def flatten(self):
         """Simplifies nested products."""
@@ -154,7 +157,6 @@ def multiply(expr1, expr2):
 
 
 def do_multiply(expr1, expr2):
-    print("do_multiply( {}, {} )".format(expr1,expr2))
     """
     You have two Expressions, and you need to make a simplified expression
     representing their product. They are guaranteed to be of type Expression
@@ -174,6 +176,63 @@ def do_multiply(expr1, expr2):
     Look above for details on the Sum and Product classes. The Python operator
     '*' will not help you.
     """
+
+    if isinstance(expr1, Product):
+        if isinstance(expr2, Product):
+            
+            # case 1 (product of products)
+            return do_multiply_product_product( expr1, expr2 )
+
+        elif isinstance(expr2, Sum):
+            
+            # case 2 (product of product and sum)
+            return do_multiply_product_sum( expr1, expr2 )
+            
+        else:
+            raise ValueError("expr2 must be a Product or Sum") 
+    elif isinstance(expr1, Sum):
+        if isinstance(expr2, Product):
+
+            # case 3 (product of sum and product)
+            return do_multiply_product_sum( expr2, expr1 )
+
+        elif isinstance(expr2, Sum):
+            raise NotImplementedError
+        else:
+            raise ValueError("expr2 must be a Product or Sum") 
+    else:
+       raise ValueError("expr1 must be a Product or Sum") 
+
     # Replace this with your solution.
     # raise NotImplementedError
+
+# simple case, we just need to collapse into one list of products
+def do_multiply_product_product( product1, product2 ):
+    for factor in product2:
+        product1.append(factor)
+
+    return product1
+
+# apply distributeive rule to produce a sum of products.
+def do_multiply_product_sum( product, sum ):
+
+    sum_of_products = []
+
+    for factor in sum:
+        copy = list(product)
+        copy.append(factor)
+        sum_of_products.append(Product(copy))
+
+    return Sum(sum_of_products)
+
+
+def do_multiply_sum_sum( sum1, sum2 ):
+
+    sum_of_products = []
+
+    for factor1 in sum1:
+        for factor2 in sum2:
+            sum_of_products.append(Product([sum1,sum2]))
+
+    return Sum(sum_of_products)
 

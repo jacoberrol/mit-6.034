@@ -249,28 +249,29 @@ def evaluator(lst, context = {}):
     if isinstance(lst, Sum):
         retVal = 0
         for elt in lst:
-            if elt in context.keys():
-                elt = context[elt]
+            if not isinstance(elt,Sum) and not isinstance(elt,Product):
+                if elt in context.keys():
+                    elt = context[elt]
 
             if isinstance(elt, Expression):
                 retVal += evaluator(elt, context)
             else:
                 retVal += elt
-#        print(retVal)
+
         return retVal
     
     elif isinstance(lst, Product):        
         retVal = 1
         for elt in lst:
-            if elt in context.keys():
-                elt = context[elt]
+            if not isinstance(elt,Sum) and not isinstance(elt,Product):
+                if elt in context.keys():
+                    elt = context[elt]
 
             if isinstance(elt, Expression):
                 retVal *= evaluator(elt, context)
             else:
                 retVal *= elt
 
-#        print(retVal)
         return retVal    
         
              
