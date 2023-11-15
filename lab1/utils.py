@@ -54,7 +54,7 @@ class NoClobberDict(MutableMapping):
 AIRegex = re.compile(r'\(\?(\S+)\)')
 
 def AIStringToRegex(AIStr):
-    return AIRegex.sub( r'(?P<\1>\S+)', AIStr )+'$'
+    return AIRegex.sub( r'(?P<\1>\\S+)', AIStr )+'$'
 
 def AIStringToPyTemplate(AIStr):
     return AIRegex.sub( r'%(\1)s', AIStr )
