@@ -22,7 +22,7 @@ class NoClobberDict(MutableMapping):
         return self._dict[key]
 
     def __setitem__(self, key, value):
-        if self._dict.has_key(key) and self._dict[key] != value:
+        if key in self._dict and self._dict[key] != value:
             raise ClobberedDictKey(key, value)
 
         self._dict[key] = value
@@ -44,11 +44,7 @@ class NoClobberDict(MutableMapping):
 
     ## add missing methods from DictMixin
     def __len__(self):
-        return len(self.mylist)
-
-    def __iter__(self):
-        for i in self.mylist:
-            yield i
+        return len(self._dict.__len__())
 
 # A regular expression for finding variables.
 AIRegex = re.compile(r'\(\?(\S+)\)')
