@@ -6,7 +6,7 @@
 
 # Import helper objects that provide the logical operations
 # discussed in class.
-from production import IF, AND, OR, NOT, THEN, forward_chain
+from production import IF, AND, OR, NOT, THEN, DELETE, forward_chain
 
 ## Section 1: Forward chaining ##
 
@@ -114,7 +114,128 @@ TEST_RESULTS_TRANS2 = forward_chain([transitive_rule],
 
 # Then, put them together into a list in order, and call it
 # family_rules.
-family_rules = [ ]                    # fill me in
+same_identity_rule = IF( 
+  OR(
+    'male (?p)',         # for ever male or female person
+    'female (?p)'
+  ),
+  THEN(
+    'same-identity (?p) (?p)' # add a same-identity rule
+  )
+)
+
+sibling_rule = IF(
+  AND(
+    'parent (?p) (?s1)',
+    'parent (?p) (?s2)',
+    NOT(
+      'same-identity (?s1) (?s2)' # not the same person
+    )
+  ),
+  THEN (
+    'sibling (?s1) (?s2)',
+    'sibling (?s2) (?s1)'
+  )
+)
+
+brother_rule = IF(
+  AND(
+    'male (?b)',          # b is male
+    'sibling (?b) (?o)'   # b is the sibling of o
+  ),
+  THEN(
+    'brother (?b) (?o)'   # b is the brother of o
+  )
+)
+
+sister_rule = IF(
+  AND(
+    'female (?s)',        # s is female
+    'sibling (?s) (?o)',  # s is the sibling of o
+    NOT(
+      'same-identity (?s) (?o)' # sister is not the same identity
+    )
+  ),
+  THEN(
+    'sister (?s) (?o)'    # s is the sister of o
+  )
+)
+
+mother_rule = IF(
+  AND(
+    'female (?m)',        # m is female
+    'parent (?m) (?o)'    # m is the parent of o
+  ),
+  THEN(
+    'mother (?m) (?o)'    # m is the mother of o
+  )
+)
+
+daughter_rule = IF(
+  AND(
+    'female (?d)',        # d is female
+    'parent (?o) (?d)'    # o is the parent of d
+  ),
+  THEN(
+    'daughter (?d) (?o)'  # d is the daughter of o
+  )
+)
+
+father_rule = IF(
+  AND(
+    'male (?f)',          # f is male
+    'parent (?f) (?o)'    # f is the parent of o
+  ),
+  THEN(
+    'father (?f) (?o)'    # f is the father of o
+  )
+)
+
+son_rule = IF(
+  AND(
+    'male (?s)',          # s is male
+    'parent (?o) (?s)'    # o is the parent of s
+  ),
+  THEN(
+    'son (?s) (?o)'       # s is the daughter of o
+  )
+)
+
+cousin_rule = IF(
+  AND(
+    'parent (?p1) (?c1)',
+    'parent (?p2) (?c2)',
+    'sibling (?p1) (?p2)'
+  ),
+  THEN(
+    'cousin (?c1) (?c2)',
+    'cousin (?c2) (?c1)'
+  )
+)
+
+grandparent_rule = IF(
+  AND(
+    'parent (?gp) (?p)'
+    'parent (?p) (?gc)'
+  ),
+  THEN (
+    'grandparent (?gp) (?gc)',
+    'grandchild (?gc) (?gp)'
+  )
+)
+
+
+family_rules = [
+  same_identity_rule,
+  sibling_rule,
+  brother_rule,
+  sister_rule,
+  mother_rule,
+  daughter_rule,
+  father_rule,
+  son_rule,
+  cousin_rule
+ ]                    # fill me in
 
 # Some examples to try it on:
 # Note: These are used for testing, so DO NOT CHANGE
