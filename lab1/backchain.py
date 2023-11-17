@@ -15,7 +15,72 @@ from zookeeper import ZOOKEEPER_RULES
 
 
 def backchain_to_goal_tree(rules, hypothesis):
-    raise NotImplementedError()
+    rv = simplify( find_matching_rules(rules,hypothesis,OR()) )
+    # rv = find_matching_rules(rules,hypothesis,OR())
+
+    print(rv)
+
+    return rv
+
+
+def find_matching_rules(rules,hypothesis,backchain):
+
+    print("evaluating hypothesis: {}".format(hypothesis) )
+
+    or_rule = OR()
+    or_rule.append(hypothesis)
+    backchain.append(or_rule)
+
+
+    # obtain all rules where the consequent matches the hypothesis
+    # assumption: every rule has exactly one consequent
+    # returns a list of tuples, each tuple contains the antecedent, consequent, and matched bindings
+    matching_rules = [(
+            rule.antecedent(),
+            rule.consequent()[0],
+            match(rule.consequent()[0],hypothesis) 
+        ) 
+        for rule in rules 
+        if match(rule.consequent()[0], hypothesis) is not None ]
+
+    # if there are one or more matching rules, then combine them into an OR()
+    if( len(matching_rules) > 0 ):
+
+        for matching_rule in matching_rules:
+
+            antecedent = matching_rule[0]
+            consequent = matching_rule[1]
+            bindings = matching_rule[2]
+
+
+            if(isinstance(antecedent,str)):
+
+                prior_hypothesis = populate( antecedent, bindings )
+                find_matching_rules( rules, prior_hypothesis, or_rule)
+
+            elif(isinstance(antecedent,AND)):
+
+                and_rule = AND()
+                or_rule.append(and_rule)
+            
+                for a in antecedent:
+
+                    prior_hypothesis = populate( a, bindings )
+                    find_matching_rules( rules, prior_hypothesis, and_rule)
+
+            elif(isinstance(antecedent,OR)):
+
+                nested_or_rule = OR()
+                or_rule.append(nested_or_rule)
+            
+                for a in antecedent:
+
+                    prior_hypothesis = populate( a, bindings )
+                    find_matching_rules( rules, prior_hypothesis, nested_or_rule)
+
+    return backchain
+            
+
 
 # Here's an example of running the backward chainer - uncomment
 # it to see it work:

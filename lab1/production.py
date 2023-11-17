@@ -370,7 +370,7 @@ def uniq(lst):
     seen = {}
     result = []
     for item in lst:
-        if not seen.has_key(str(item)):
+        if not str(item) in seen:
             result.append(item)
             seen[str(item)]=True
     return result
