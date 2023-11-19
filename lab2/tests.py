@@ -173,7 +173,7 @@ if do_bfs:
 
     def bfs_1_testanswer(val, original_val = None):
         if val and len(val) > 0 and isinstance(val[0], dict):
-            raise Exception, "Error: Graph functions are supposed to return a list of node *names*, not node dictionaries!"
+            raise Exception("Error: Graph functions are supposed to return a list of node *names*, not node dictionaries!")
 
         return ( val and list(val) == list('SCDH') )
 
@@ -435,7 +435,7 @@ def exp_graph(depth):
     g = Graph(["1"])
     goal = 1
     for d in range(depth):
-        nodeids = range(2**(d+1), 2**(d+2))
+        nodeids = list(range(2**(d+1), 2**(d+2)))
         goal = random.choice(nodeids)
         for nodeid in nodeids:
             parent = nodeid/2 # intentional integer division
@@ -456,7 +456,7 @@ def exp_graph(depth):
     return g
 
 hill_climbing_test_6_graph = exp_graph(10)
-hill_climbing_test_6_goal = hill_climbing_test_6_graph.heuristic.keys()[0]
+hill_climbing_test_6_goal = list(hill_climbing_test_6_graph.heuristic.keys())[0]
 hill_climbing_timing = {'START': 0}
 
 def hill_climbing_6_getargs():
@@ -696,7 +696,7 @@ make_test(type = 'FUNCTION',
 ### TEST 29 ###
 
 a_star_test_5_graph = exp_graph(11)
-a_star_test_5_goal = a_star_test_5_graph.heuristic.keys()[0]
+a_star_test_5_goal = list(a_star_test_5_graph.heuristic.keys())[0]
 a_star_timing = {'START': 0}
 
 def a_star_5_getargs():
