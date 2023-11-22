@@ -431,7 +431,7 @@ make_test(type = 'FUNCTION',
 
 ### TEST 15 ###
 
-print("skipping 15 for now because it's slow")
+# print("skipping 15 for now because it's slow")
 
 def exp_graph(depth):
     g = Graph(["1"])
@@ -457,7 +457,6 @@ def exp_graph(depth):
         g.set_heuristic(str(nodeid), str(goal), distance+best_path.index(shared_parent))
     return g
 
-'''
 hill_climbing_test_6_graph = exp_graph(10)
 hill_climbing_test_6_goal = list(hill_climbing_test_6_graph.heuristic.keys())[0]
 hill_climbing_timing = {'START': 0}
@@ -475,9 +474,7 @@ make_test(type = 'FUNCTION',
           testanswer = hill_climbing_6_testanswer,
           expected_val = ("hill climbing to take less than one second and get to %s"
                           % hill_climbing_test_6_goal),
-          name = 'hill_climbing'
-          )
-'''
+          name = 'hill_climbing')
 
 ### TEST 16 ###
 
@@ -701,7 +698,6 @@ make_test(type = 'FUNCTION',
 
 print("skipping 29 for now because it's slow")
 
-'''
 a_star_test_5_graph = exp_graph(11)
 a_star_test_5_goal = list(a_star_test_5_graph.heuristic.keys())[0]
 a_star_timing = {'START': 0}
@@ -721,7 +717,7 @@ make_test(type = 'FUNCTION',
                           % a_star_test_5_goal),
           name = 'a_star'
           )
-'''
+
 
 ### TEST 30 ###
 
@@ -734,7 +730,7 @@ def a_star_test_6_testanswer(val, original_val=None):
 make_test(type = 'FUNCTION_ENCODED_ARGS',
           getargs = a_star_test_6_getargs,
           testanswer = a_star_test_6_testanswer,
-          expected_val = list('SBCJLT') # "correct path for the quiz search problem",
+          expected_val = list('SBCJLT'), # "correct path for the quiz search problem",
           name = 'a_star'
           )
 
