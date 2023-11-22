@@ -45,4 +45,4 @@ if __name__ == "__main__":
             os.mkdir("vis")
             cdr = True
         subprocess.run(["dot", "-Tpng", f"{name}.dot", "-o", f"vis/{name}.png"])
-        os.remove(f"{os.curdir}\\{name}.dot")
+        os.remove(f"{os.curdir}/{name}.dot")
