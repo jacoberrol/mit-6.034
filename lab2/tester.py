@@ -161,6 +161,7 @@ def run_test(test, lab):
 
 
 def test_offline(verbosity=1):
+
     """ Run the unit tests in 'tests.py' """
     import tests as tests_module
     
@@ -177,6 +178,7 @@ def test_offline(verbosity=1):
     ncorrect = 0
     
     for index, (testname, getargs, testanswer, expected, fn_name, type) in enumerate(tests):
+
         dispindex = index+1
         summary = test_summary(dispindex, ntests)
         
@@ -242,6 +244,9 @@ def get_tarball_data(target_dir, filename):
     
 
 def test_online(verbosity=1):
+
+    print("testing ONLINE")
+
     """ Run online unit tests.  Run them against the 6.034 server via XMLRPC. """
     lab = get_lab_module()
 
