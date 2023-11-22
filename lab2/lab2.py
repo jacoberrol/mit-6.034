@@ -154,7 +154,6 @@ class Search(object):
         return self.generic_search(remove_func,add_func,sort_func,mutate_func)
     
     def branch_and_bound(self) -> list:
-        print("branch and bound")
         def remove_func(search):
             return search.dequeue()
 
@@ -170,7 +169,6 @@ class Search(object):
         return self.generic_search(remove_func,add_func,None,mutate_func)
 
     def a_star(self) -> list:
-        print("a star")
         self.counter=0
 
         def remove_func(search):
@@ -316,7 +314,14 @@ def a_star(graph, start, goal):
 ## consistent, but not admissible?
 
 def is_admissible(graph, goal):
-    raise NotImplementedError
+    if goal in graph.heuristic.keys():
+        for start in graph.heuristic[goal].keys():
+            search = Search(graph, start, goal)
+            path = search.branch_and_bound()
+            length = path_length(graph, path)
+            if graph.heuristic[goal][start] > length:
+                return False
+    return True
 
 def is_consistent(graph, goal):
     raise NotImplementedError
