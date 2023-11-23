@@ -7,9 +7,10 @@ import tree_searcher
 try:
     INFINITY = float("infinity")
     NEG_INFINITY = float("-infinity")
-except ValueError:                 # Windows doesn't support 'float("infinity")'.
-    INFINITY = float(1e3000)       # However, '1e3000' will overflow and return
+except ValueError:  # Windows doesn't support 'float("infinity")'.
+    INFINITY = float(1e3000)  # However, '1e3000' will overflow and return
     NEG_INFINITY = float(-1e3000)  # the magic float Infinity value anyway.
+
 
 class ContinuousThread(Thread):
     """
@@ -33,12 +34,12 @@ class ContinuousThread(Thread):
         """ Run until the specified time limit has been exceeded """
         depth = 1
 
-        timeout = self._timeout**(1/2.0)  # Times grow exponentially, and we don't want to
-                                          # start a new depth search when we won't have
-                                          # enough time to finish it
+        timeout = self._timeout ** (1 / 2.0)  # Times grow exponentially, and we don't want to
+        # start a new depth search when we won't have
+        # enough time to finish it
 
         end_time = time() + timeout
-        
+
         while time() < end_time:
             self._kwargs['depth'] = depth
             self._most_recent_val = self._target(*self._args, **self._kwargs)
@@ -49,11 +50,14 @@ class ContinuousThread(Thread):
         try:
             return self._most_recent_val
         except AttributeError:
-            print "Error: You ran the search function for so short a time that it couldn't even come up with any answer at all!  Returning a random column choice..."
+            print(
+                "Error: You ran the search function for so short a time that it couldn't even come up with any answer "
+                "at all!  Returning a random column choice...")
             import random
             return random.randint(0, 6)
-    
-def run_search_function(board, search_fn, eval_fn, timeout = 5):
+
+
+def run_search_function(board, search_fn, eval_fn, timeout=5):
     """
     Run the specified search function "search_fn" to increasing depths
     until "time" has expired; then return the most recent available return value
@@ -67,12 +71,12 @@ def run_search_function(board, search_fn, eval_fn, timeout = 5):
     board -- the ConnectFourBoard to rank
     """
 
-    eval_t = ContinuousThread(timeout=timeout, target=search_fn, kwargs={ 'board': board,
-                                                                          'eval_fn': eval_fn })
+    eval_t = ContinuousThread(timeout=timeout, target=search_fn, kwargs={'board': board,
+                                                                         'eval_fn': eval_fn})
 
     eval_t.setDaemon(True)
     eval_t.start()
-    
+
     eval_t.join(timeout)
 
     # Note that the thread may not actually be done eating CPU cycles yet;
@@ -92,12 +96,13 @@ class memoize(object):
     def my_fn(stuff):
         # Do stuff
     """
+
     def __init__(self, fn):
         self.fn = fn
         self.memocache = {}
 
     def __call__(self, *args, **kwargs):
-        memokey = ( args, tuple( sorted(kwargs.items()) ) )
+        memokey = (args, tuple(sorted(kwargs.items())))
         if memokey in self.memocache:
             return self.memocache[memokey]
         else:
@@ -135,49 +140,48 @@ class count_runs(object):
         return self.count
 
 
-    
 # Some sample boards, useful for testing:
 # Obvious win
-WINNING_BOARD = ConnectFourBoard(board_array =
-                                 ( ( 0,0,0,0,0,0,0 ),
-                                   ( 0,0,0,0,0,0,0 ),
-                                   ( 0,0,0,0,0,0,0 ),
-                                   ( 0,1,0,0,0,0,0 ),
-                                   ( 0,1,0,0,0,2,0 ),
-                                   ( 0,1,0,0,2,2,0 ),
-                                   ),
-                                 current_player = 1)
+WINNING_BOARD = ConnectFourBoard(board_array=
+                                 ((0, 0, 0, 0, 0, 0, 0),
+                                  (0, 0, 0, 0, 0, 0, 0),
+                                  (0, 0, 0, 0, 0, 0, 0),
+                                  (0, 1, 0, 0, 0, 0, 0),
+                                  (0, 1, 0, 0, 0, 2, 0),
+                                  (0, 1, 0, 0, 2, 2, 0),
+                                  ),
+                                 current_player=1)
 
 # 2 can win, but 1 can win a lot more easily
-BARELY_WINNING_BOARD = ConnectFourBoard(board_array =
-                                        ( ( 0,0,0,0,0,0,0 ),
-                                          ( 0,0,0,0,0,0,0 ),
-                                          ( 0,0,0,0,0,0,0 ),
-                                          ( 0,2,2,1,1,2,0 ),
-                                          ( 0,2,1,2,1,2,0 ),
-                                          ( 2,1,2,1,1,1,0 ),
-                                          ),
-                                        current_player = 2)
+BARELY_WINNING_BOARD = ConnectFourBoard(board_array=
+                                        ((0, 0, 0, 0, 0, 0, 0),
+                                         (0, 0, 0, 0, 0, 0, 0),
+                                         (0, 0, 0, 0, 0, 0, 0),
+                                         (0, 2, 2, 1, 1, 2, 0),
+                                         (0, 2, 1, 2, 1, 2, 0),
+                                         (2, 1, 2, 1, 1, 1, 0),
+                                         ),
+                                        current_player=2)
 
-BASIC_STARTING_BOARD_1 = ConnectFourBoard(board_array =
-                                          ( ( 0,0,0,0,0,0,0 ),
-                                            ( 0,0,0,0,0,0,0 ),
-                                            ( 0,0,0,0,0,0,0 ),
-                                            ( 0,0,0,0,0,0,0 ),
-                                            ( 0,0,0,0,0,0,0 ),
-                                            ( 0,0,1,0,2,0,0 ),
-                                            ),
-                                          current_player = 1)
+BASIC_STARTING_BOARD_1 = ConnectFourBoard(board_array=
+                                          ((0, 0, 0, 0, 0, 0, 0),
+                                           (0, 0, 0, 0, 0, 0, 0),
+                                           (0, 0, 0, 0, 0, 0, 0),
+                                           (0, 0, 0, 0, 0, 0, 0),
+                                           (0, 0, 0, 0, 0, 0, 0),
+                                           (0, 0, 1, 0, 2, 0, 0),
+                                           ),
+                                          current_player=1)
 
-BASIC_STARTING_BOARD_2 = ConnectFourBoard(board_array =
-                                          ( ( 0,0,0,0,0,0,0 ),
-                                            ( 0,0,0,0,0,0,0 ),
-                                            ( 0,0,0,0,0,0,0 ),
-                                            ( 0,0,0,0,0,0,0 ),
-                                            ( 0,0,2,0,0,0,0 ),
-                                            ( 0,0,1,0,0,0,0 ),
-                                            ),
-                                          current_player = 1)
+BASIC_STARTING_BOARD_2 = ConnectFourBoard(board_array=
+                                          ((0, 0, 0, 0, 0, 0, 0),
+                                           (0, 0, 0, 0, 0, 0, 0),
+                                           (0, 0, 0, 0, 0, 0, 0),
+                                           (0, 0, 0, 0, 0, 0, 0),
+                                           (0, 0, 2, 0, 0, 0, 0),
+                                           (0, 0, 1, 0, 0, 0, 0),
+                                           ),
+                                          current_player=1)
 
 # Generic board
 BASIC_BOARD = ConnectFourBoard()
@@ -253,6 +257,3 @@ TEST_TREE_3 = tree_searcher.make_tree(("A", None,
                                          )
                                         )
                                        ))
-
-
-

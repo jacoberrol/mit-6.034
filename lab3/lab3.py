@@ -128,9 +128,9 @@ if False:
     test_board_2 = ConnectFourBoard(board_array = board_tuples,
                                     current_player = 2)
     # better evaluate from player 1
-    print "%s => %s" %(test_board_1, better_evaluate(test_board_1))
+    print("%s => %s" %(test_board_1, better_evaluate(test_board_1)))
     # better evaluate from player 2
-    print "%s => %s" %(test_board_2, better_evaluate(test_board_2))
+    print("%s => %s" %(test_board_2, better_evaluate(test_board_2)))
 
 ## A player that uses alpha-beta and better_evaluate:
 your_player = lambda board: run_search_function(board,
