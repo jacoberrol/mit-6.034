@@ -351,16 +351,16 @@ def is_admissible(graph, goal):
 
 @timing.time
 def is_consistent(graph, goal):
-    print(goal)
     if goal in graph.heuristic:
         for start, h1 in graph.heuristic[goal].items():
             connected_nodes = graph.get_connected_nodes(start)
             for node in connected_nodes:
                 length = graph.get_edge(start,node).length
+                h2 = 0
                 if node in graph.heuristic[goal]:
                     h2 = graph.heuristic[goal][node]
-                    if h1 > (h2+length):
-                        return False
+                if h1 > (h2+length):
+                    return False
     return True
 
 
