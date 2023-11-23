@@ -1,0 +1,13 @@
+graph {
+	"S" -- "A" [label = "L:6"];
+	"A" -- "B" [label = "L:4"];
+	"B" -- "F" [label = "L:7"];
+	"C" -- "D" [label = "L:6"];
+	"C" -- "A" [label = "L:3"];
+	"E" -- "D" [label = "L:7"];
+	"D" -- "H" [label = "L:6"];
+	"S" -- "C" [label = "L:2"];
+	"B" -- "D" [label = "L:2"];
+	"E" -- "G" [label = "L:25"];
+	"E" -- "C" [label = "L:5"];
+	"G" -- "S" [label = "H:11", color=blue];	"G" -- "A" [label = "H:9", color=blue];	"G" -- "B" [label = "H:6", color=blue];	"G" -- "C" [label = "H:12", color=blue];	"G" -- "D" [label = "H:8", color=blue];	"G" -- "E" [label = "H:15", color=blue];	"G" -- "F" [label = "H:1", color=blue];	"G" -- "H" [label = "H:2", color=blue];	"H" -- "S" [label = "H:11", color=blue];	"H" -- "A" [label = "H:9", color=blue];	"H" -- "B" [label = "H:6", color=blue];	"H" -- "D" [label = "H:12", color=blue];	"H" -- "E" [label = "H:8", color=blue];	"H" -- "F" [label = "H:15", color=blue];	"H" -- "G" [label = "H:14", color=blue];	"A" -- "S" [label = "H:5", color=blue];	"A" -- "B" [label = "H:1", color=blue];	"A" -- "C" [label = "H:3", color=blue];	"A" -- "D" [label = "H:6", color=blue];	"A" -- "E" [label = "H:8", color=blue];	"A" -- "F" [label = "H:11", color=blue];	"A" -- "G" [label = "H:33", color=blue];	"A" -- "H" [label = "H:12", color=blue];	"C" -- "S" [label = "H:2", color=blue];	"C" -- "A" [label = "H:3", color=blue];	"C" -- "B" [label = "H:7", color=blue];	"C" -- "D" [label = "H:6", color=blue];	"C" -- "E" [label = "H:5", color=blue];	"C" -- "F" [label = "H:14", color=blue];	"C" -- "G" [label = "H:30", color=blue];	"C" -- "H" [label = "H:12", color=blue];}
