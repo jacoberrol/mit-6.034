@@ -37,7 +37,7 @@ def create_heuristic(heuristic: int, n1: str, n2: str) -> str:
 
 
 if __name__ == "__main__":
-    gs = [(graphs.GRAPH1, "graph1"), (graphs.GRAPH2, "graph2"), (graphs.GRAPH3, "graph3"), (graphs.GRAPH4, "graph4"), (graphs.GRAPH5, "graph5"), (graphs.AGRAPH, "agraph")]
+    gs = [(graphs.NEWGRAPH1,"newgraph1"),(graphs.GRAPH1, "graph1"), (graphs.GRAPH2, "graph2"), (graphs.GRAPH3, "graph3"), (graphs.GRAPH4, "graph4"), (graphs.GRAPH5, "graph5"), (graphs.AGRAPH, "agraph")]
     cdr = False
     for graph, name in gs:
         vis(graph, name)

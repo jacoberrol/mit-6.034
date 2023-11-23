@@ -351,6 +351,7 @@ def is_admissible(graph, goal):
 
 @timing.time
 def is_consistent(graph, goal):
+    print(goal)
     if goal in graph.heuristic:
         for start, h1 in graph.heuristic[goal].items():
             connected_nodes = graph.get_connected_nodes(start)
