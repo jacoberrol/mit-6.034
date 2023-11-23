@@ -1,1 +1,1 @@
-oliverj-util=0.0.3
+oliverj-util=0.0.6
