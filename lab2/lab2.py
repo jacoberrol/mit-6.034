@@ -1,3 +1,8 @@
+from oliverj_utils.timing import Timing, Tree
+
+tree=Tree()
+timing=Timing(tree)
+
 # Fall 2012 6.034 Lab 2: Search
 #
 # Your answers for the true and false questions will be in the following form.  
@@ -66,8 +71,7 @@ class Search(object):
     def push(self, path: list) -> None:
         if len(path) == 0:
             raise ValueError("You cannot add a zero length path to the agenda")
-        # self.visit( path[-1] )
-        self.agenda.append(path)
+        self.agenda.append( path )
 
     ## append a path to the tail of the agenda
     @timing.time
@@ -206,20 +210,16 @@ class Search(object):
         @timing.time
         def mutate_func():
             min_paths = dict()
-            self.counter = self.counter + 1
-            # print("mutate {}: {}".format(self.counter,self.agenda))
-            # print("min_paths: {}".format(min_paths))
-
+            self.counter=self.counter+1
+            
             # first evaluate every path in agenda that goes through a common node
             # keep only paths that have reach common node with least cost            
             for path in self.agenda:
                 for node in path:
-                    distance = path_length(self.graph, path, node)
-                    if node not in min_paths or distance < min_paths[node][0]:
-                        min_paths[node] = (distance, path)
-
-            # print("min_paths: {}".format(min_paths))
-
+                    distance = path_length(self.graph,path,node)        
+                    if( not node in min_paths or distance < min_paths[node][0] ):
+                        min_paths[node] = (distance,path)
+            
             filtered_agenda = list()
             for (node, t) in min_paths.items():
                 distance = t[0]
@@ -229,8 +229,6 @@ class Search(object):
 
             self.agenda = filtered_agenda
 
-            # print("mutated: {}".format(self.agenda))
-
             # then sort the agenda by cost, ascending
             @timing.time
             def order_func(val):
@@ -239,9 +237,7 @@ class Search(object):
 
             self.agenda.sort(key=order_func, reverse=False)
 
-            # print("sorted: {}".format(self.agenda))
-
-        return self.generic_search(remove_func, add_func, None, mutate_func)
+        return self.generic_search(remove_func,add_func,None,mutate_func)
 
     @timing.time
     def generic_search(self, remove_func, add_func, sort_func=None, mutate_func=None) -> list:
@@ -250,19 +246,15 @@ class Search(object):
 
             current_path = remove_func(self)
 
-            # print("current: {}".format(current_path))
-
             # if the last node in the current path is goal, then we're done
             last_node = current_path[-1]
             if last_node == self.goal:
                 return current_path
 
             # obtain the list of next nodes (skipping any that are already in current path)
-            next_nodes = [next for next
-                          in self.graph.get_connected_nodes(last_node)
-                          if next not in current_path]
-
-            # print("next: {}".format(next_nodes))
+            next_nodes = [next for next 
+                in self.graph.get_connected_nodes(last_node) 
+                if not next in current_path]
 
             # if a sorting function has been provided, then apply it
             if sort_func is not None:
@@ -272,15 +264,11 @@ class Search(object):
             for next in next_nodes:
                 next_path = current_path.copy()
                 next_path.append(next)
-                add_func(self, next_path)
-
-            # print("agenda: {}".format(self.agenda))
+                add_func(self,next_path)
 
             # if an agenda mutation function has been provided, then apply it
             if mutate_func is not None:
                 next_nodes = mutate_func()
-
-            # print("muated agenda: {}".format(self.agenda))
 
         # no path found, return empty list
         return []
@@ -363,7 +351,16 @@ def is_admissible(graph, goal):
 
 @timing.time
 def is_consistent(graph, goal):
-    raise NotImplementedError
+    if goal in graph.heuristic:
+        for start, h1 in graph.heuristic[goal].items():
+            connected_nodes = graph.get_connected_nodes(start)
+            for node in connected_nodes:
+                length = graph.get_edge(start,node).length
+                if node in graph.heuristic[goal]:
+                    h2 = graph.heuristic[goal][node]
+                    if h1 > (h2+length):
+                        return False
+    return True
 
 
 HOW_MANY_HOURS_THIS_PSET_TOOK = '8'
