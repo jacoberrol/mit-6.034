@@ -248,7 +248,7 @@ def get_tarball_data(target_dir, filename):
 
     return data.getvalue()
     
-
+'''
 def test_online(verbosity=1):
     """ Run online unit tests.  Run them against the 6.034 server via XMLRPC. """
     lab = get_lab_module()
@@ -308,7 +308,7 @@ def test_online(verbosity=1):
     
     response = server.status(username, password, lab.__name__)
     print(response)
-
+'''
 
 
 if __name__ == '__main__':
