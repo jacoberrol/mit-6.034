@@ -69,8 +69,8 @@ def run_test_search_2_testanswer(val, original_val = None):
     return ( val == 3 )
 
 make_test(type = 'FUNCTION',
-          getargs = run_test_search_1_getargs,
-          testanswer = run_test_search_1_testanswer,
+          getargs = run_test_search_2_getargs,
+          testanswer = run_test_search_2_testanswer,
           expected_val = "3",
           name = 'run_test_search'
           )

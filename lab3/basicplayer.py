@@ -86,7 +86,7 @@ def minimax(board, depth, eval_fn = basic_evaluate,
             best_val = (val, move, new_board)
             
     if verbose:
-        print("MINIMAX: Decided on column %d with rating %d" % (best_val[1], best_val[0]))
+        print("MINIMAX: Decided on column {} with rating {}".format(best_val[1], best_val[0]))
 
     return best_val[1]
 
