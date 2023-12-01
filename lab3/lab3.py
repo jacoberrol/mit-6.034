@@ -91,7 +91,7 @@ def alpha_beta_find_board_value(board, depth, eval_fn,
     best_val = None
     
     for move, new_board in get_next_moves_fn(board):
-        val = -1 * alp``ha_beta_find_board_value(new_board, depth-1, eval_fn,
+        val = -1 * alpha_beta_find_board_value(new_board, depth-1, eval_fn,
                                             get_next_moves_fn, is_terminal_fn)
         if best_val == None or val > best_val:
             best_val = val
