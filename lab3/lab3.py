@@ -78,6 +78,26 @@ def focused_evaluate(board):
 quick_to_win_player = lambda board: minimax(board, depth=4,
                                             eval_fn=focused_evaluate)
 
+def alpha_beta_find_board_value(board, depth, eval_fn,
+                             get_next_moves_fn=get_all_next_moves,
+                             is_terminal_fn=is_terminal):
+    """
+    Alpha Beta helper function: Return the alphabeta value of a particular board,
+    given a particular depth to estimate to
+    """
+    if is_terminal_fn(depth, board):
+        return eval_fn(board)
+
+    best_val = None
+    
+    for move, new_board in get_next_moves_fn(board):
+        val = -1 * alp``ha_beta_find_board_value(new_board, depth-1, eval_fn,
+                                            get_next_moves_fn, is_terminal_fn)
+        if best_val == None or val > best_val:
+            best_val = val
+
+    return best_val
+
 ## You can try out your new evaluation function by uncommenting this line:
 #run_game(basic_player, quick_to_win_player)
 
@@ -95,30 +115,22 @@ def alpha_beta_search(board, depth,
                       # The default functions set here will work
                       # for connect_four.
                       get_next_moves_fn=get_all_next_moves,
-		              is_terminal_fn=is_terminal):
+		              is_terminal_fn=is_terminal,
+                      verbose=True):
     
-    return minimax(
-                board,
-                depth,
-                eval_fn,
-                get_next_moves_fn,
-		        is_terminal_fn,
-                True)
-    '''
     best_val = None
     
     for move, new_board in get_next_moves_fn(board):
-        val = -1 * minimax_find_board_value(new_board, depth-1, eval_fn,
+        val = -1 * alpha_beta_find_board_value(new_board, depth-1, eval_fn,
                                             get_next_moves_fn,
                                             is_terminal_fn)
         if best_val == None or val > best_val[0]:
             best_val = (val, move, new_board)
             
     if verbose:
-        print("MINIMAX: Decided on column %d with rating %d" % (best_val[1], best_val[0]))
+        print("ALPHABETA: Decided on column {} with rating {}".format(best_val[1], best_val[0]))
 
     return best_val[1]
-    '''
 
 ## Now you should be able to search twice as deep in the same amount of time.
 ## (Of course, this alpha-beta-player won't work until you've defined
