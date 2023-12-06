@@ -120,8 +120,8 @@ def make_tree_helper(tup, node_type):
     if len(tup) > 2:
         if node_type == "MAX":
             node_type = "MIN"
-    else:
-        node_type = "MAX"
+        else:
+            node_type = "MAX"
 
     for c in range(2, len(tup)):
         children.append(make_tree_helper(tup[c], node_type))

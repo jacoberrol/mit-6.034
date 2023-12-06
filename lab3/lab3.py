@@ -78,9 +78,12 @@ def focused_evaluate(board):
 quick_to_win_player = lambda board: minimax(board, depth=4,
                                             eval_fn=focused_evaluate)
 
+def get_dem_moves(board):
+    return get_all_next_moves(board)
+
 def alpha_beta_find_board_value(board, depth, bounding_val=None,
                             eval_fn=focused_evaluate,
-                            get_next_moves_fn=get_all_next_moves,
+                            get_next_moves_fn=get_dem_moves,
                             is_terminal_fn=is_terminal):
     """
     Alpha Beta helper function: Return the alphabeta value of a particular board,
@@ -126,7 +129,7 @@ def alpha_beta_search(board, depth,
                       # checking game termination.
                       # The default functions set here will work
                       # for connect_four.
-                      get_next_moves_fn=get_all_next_moves,
+                      get_next_moves_fn=get_dem_moves,
 		              is_terminal_fn=is_terminal,
                       verbose=True):
     
