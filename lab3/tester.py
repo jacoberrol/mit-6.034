@@ -3,6 +3,7 @@ import traceback
 import sys
 import os
 import tarfile
+import argparse
 
 try:
     from io import StringIO
@@ -167,9 +168,11 @@ def run_test(test, lab):
         raise Exception("Test Error: Unknown TYPE '%s'.  Please make sure you have downloaded the latest version of the tester script.  If you continue to see this error, contact a TA.")
 
 
-def test_offline(verbosity=1):
+def test_offline(verbosity=1,test_to_run=None):
     """ Run the unit tests in 'tests.py' """
     import tests as tests_module
+
+    print("test_offline verbosity={} test_to_run={}".format(verbosity,test_to_run))
     
 #    tests = [ (x[:-8],
 #               getattr(tests_module, x),
@@ -184,6 +187,12 @@ def test_offline(verbosity=1):
     ncorrect = 0
     
     for index, (testname, getargs, testanswer, expected, fn_name, type) in enumerate(tests):
+
+        ## skip tests if test_to_run flag is provided and it doesn't match
+        if test_to_run is not None and index != test_to_run:
+            print("skipping {}:{} because --test {} was indicated".format(index,testname,test_to_run))
+            continue
+
         dispindex = index+1
         summary = test_summary(dispindex, ntests)
         
@@ -312,7 +321,17 @@ def test_online(verbosity=1):
 
 
 if __name__ == '__main__':
-    test_offline()
+
+    parser = argparse.ArgumentParser("tester")
+    parser.add_argument("--test", help="Run only the test given it's index", required=False )
+    args = parser.parse_args()
+
+    print("args {}".format(args.test))
+
+    if args.test is not None:
+        test_offline(test_to_run=int(args.test))
+    else:
+        test_offline()
         
 
 def make_test_counter_decorator():

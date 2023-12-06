@@ -78,9 +78,10 @@ def focused_evaluate(board):
 quick_to_win_player = lambda board: minimax(board, depth=4,
                                             eval_fn=focused_evaluate)
 
-def alpha_beta_find_board_value(board, depth, eval_fn,
-                             get_next_moves_fn=get_all_next_moves,
-                             is_terminal_fn=is_terminal):
+def alpha_beta_find_board_value(board, depth, bounding_val=None,
+                            eval_fn=focused_evaluate,
+                            get_next_moves_fn=get_all_next_moves,
+                            is_terminal_fn=is_terminal):
     """
     Alpha Beta helper function: Return the alphabeta value of a particular board,
     given a particular depth to estimate to
@@ -89,13 +90,24 @@ def alpha_beta_find_board_value(board, depth, eval_fn,
         return eval_fn(board)
 
     best_val = None
+    new_bounding_val = None 
+    
+    if bounding_val is not None:
+        new_bounding_val = bounding_val*-1
     
     for move, new_board in get_next_moves_fn(board):
-        val = -1 * alpha_beta_find_board_value(new_board, depth-1, eval_fn,
+
+        val = -1 * alpha_beta_find_board_value(new_board, depth-1, 
+                                            invert_or_none(new_bounding_val), eval_fn,
                                             get_next_moves_fn, is_terminal_fn)
+        
+        if bounding_val is not None and val > bounding_val:
+            #if a next board value exceeds the bounding value than we can stop (alpha beta optimization)
+            return val
         if best_val == None or val > best_val:
             best_val = val
-
+            new_bounding_val = best_val
+        
     return best_val
 
 ## You can try out your new evaluation function by uncommenting this line:
@@ -119,18 +131,28 @@ def alpha_beta_search(board, depth,
                       verbose=True):
     
     best_val = None
+    new_bounding_val = None
     
     for move, new_board in get_next_moves_fn(board):
-        val = -1 * alpha_beta_find_board_value(new_board, depth-1, eval_fn,
+
+        val = -1 * alpha_beta_find_board_value(new_board, depth-1, 
+                                            invert_or_none(new_bounding_val), eval_fn,
                                             get_next_moves_fn,
                                             is_terminal_fn)
         if best_val == None or val > best_val[0]:
             best_val = (val, move, new_board)
+            new_bounding_val = best_val[0]
             
     if verbose:
         print("ALPHABETA: Decided on column {} with rating {}".format(best_val[1], best_val[0]))
 
     return best_val[1]
+
+def invert_or_none(val):
+    if val is None:
+        return None
+    
+    return val*-1
 
 ## Now you should be able to search twice as deep in the same amount of time.
 ## (Of course, this alpha-beta-player won't work until you've defined
