@@ -78,9 +78,6 @@ def focused_evaluate(board):
 quick_to_win_player = lambda board: minimax(board, depth=4,
                                             eval_fn=focused_evaluate)
 
-def get_dem_moves(board):
-    return get_all_next_moves(board)
-
 def alpha_beta_find_board_value(board, depth, bounding_val=None,
                             eval_fn=focused_evaluate,
                             get_next_moves_fn=get_dem_moves,
@@ -93,23 +90,21 @@ def alpha_beta_find_board_value(board, depth, bounding_val=None,
         return eval_fn(board)
 
     best_val = None
-    new_bounding_val = None 
-    
-    if bounding_val is not None:
-        new_bounding_val = bounding_val*-1
     
     for move, new_board in get_next_moves_fn(board):
 
-        val = -1 * alpha_beta_find_board_value(new_board, depth-1, 
-                                            invert_or_none(new_bounding_val), eval_fn,
-                                            get_next_moves_fn, is_terminal_fn)
+        val = -1 * alpha_beta_find_board_value(
+                                            new_board, depth-1, 
+                                            invert_or_none(best_val),
+                                            eval_fn,
+                                            get_next_moves_fn,
+                                            is_terminal_fn)
         
         if bounding_val is not None and val > bounding_val:
             #if a next board value exceeds the bounding value than we can stop (alpha beta optimization)
             return val
         if best_val == None or val > best_val:
             best_val = val
-            new_bounding_val = best_val
         
     return best_val
 
@@ -129,27 +124,30 @@ def alpha_beta_search(board, depth,
                       # checking game termination.
                       # The default functions set here will work
                       # for connect_four.
-                      get_next_moves_fn=get_dem_moves,
+                      get_next_moves_fn=get_all_next_moves,
 		              is_terminal_fn=is_terminal,
                       verbose=True):
     
     best_val = None
-    new_bounding_val = None
+    best_move = None
     
     for move, new_board in get_next_moves_fn(board):
-
-        val = -1 * alpha_beta_find_board_value(new_board, depth-1, 
-                                            invert_or_none(new_bounding_val), eval_fn,
+        
+        val = -1 * alpha_beta_find_board_value(
+                                            new_board, depth-1, 
+                                            invert_or_none(best_val), 
+                                            eval_fn,
                                             get_next_moves_fn,
                                             is_terminal_fn)
-        if best_val == None or val > best_val[0]:
-            best_val = (val, move, new_board)
-            new_bounding_val = best_val[0]
+        
+        if best_val == None or val > best_val:
+            best_val = val
+            best_move = move
             
     if verbose:
-        print("ALPHABETA: Decided on column {} with rating {}".format(best_val[1], best_val[0]))
+        print("ALPHABETA: Decided on column {} with rating {}".format(best_move, best_val))
 
-    return best_val[1]
+    return best_move
 
 def invert_or_none(val):
     if val is None:

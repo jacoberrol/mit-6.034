@@ -168,11 +168,11 @@ def run_test(test, lab):
         raise Exception("Test Error: Unknown TYPE '%s'.  Please make sure you have downloaded the latest version of the tester script.  If you continue to see this error, contact a TA.")
 
 
-def test_offline(verbosity=1,test_to_run=None):
+def test_offline(verbosity=1,test_to_run=None,test_to_skip=None):
     """ Run the unit tests in 'tests.py' """
     import tests as tests_module
 
-    print("test_offline verbosity={} test_to_run={}".format(verbosity,test_to_run))
+    print("test_offline verbosity={} test_to_run={} test_to_skip={}".format(verbosity,test_to_run,test_to_skip))
     
 #    tests = [ (x[:-8],
 #               getattr(tests_module, x),
@@ -191,6 +191,10 @@ def test_offline(verbosity=1,test_to_run=None):
         ## skip tests if test_to_run flag is provided and it doesn't match
         if test_to_run is not None and index != test_to_run:
             print("skipping {}:{} because --test {} was indicated".format(index,testname,test_to_run))
+            continue
+
+        if test_to_skip is not None and index == test_to_skip:
+            print("skipping {}:{} because --skiptest {} was indicated".format(index,testname,test_to_skip))
             continue
 
         dispindex = index+1
@@ -324,15 +328,20 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser("tester")
     parser.add_argument("--test", help="Run only the test given it's index", required=False )
+    parser.add_argument("--skiptest", help="Skip the test given it's index", required=False )
     args = parser.parse_args()
 
     print("args {}".format(args.test))
 
+    tr = None
+    ts = None
     if args.test is not None:
-        test_offline(test_to_run=int(args.test))
-    else:
-        test_offline()
-        
+        tr=int(args.test)
+    if args.skiptest is not None:
+        ts=int(args.skiptest)
+    
+    test_offline(test_to_run=tr,test_to_skip=ts)
+
 
 def make_test_counter_decorator():
     tests = []
