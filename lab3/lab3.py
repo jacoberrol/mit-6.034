@@ -78,9 +78,12 @@ def focused_evaluate(board):
 quick_to_win_player = lambda board: minimax(board, depth=4,
                                             eval_fn=focused_evaluate)
 
-def alpha_beta_find_board_value(board, depth, bounding_val=None,
+def alpha_beta_find_board_value(
+                            board, 
+                            depth, 
+                            bounding_val=None,
                             eval_fn=focused_evaluate,
-                            get_next_moves_fn=get_dem_moves,
+                            get_next_moves_fn=get_all_next_moves,
                             is_terminal_fn=is_terminal):
     """
     Alpha Beta helper function: Return the alphabeta value of a particular board,
@@ -117,13 +120,9 @@ def alpha_beta_find_board_value(board, depth, bounding_val=None,
 ## counting the number of static evaluations you make.
 ##
 ## You can use minimax() in basicplayer.py as an example.
-def alpha_beta_search(board, depth,
+def alpha_beta_search(board, 
+                      depth,
                       eval_fn,
-                      # NOTE: You should use get_next_moves_fn when generating
-                      # next board configurations, and is_terminal_fn when
-                      # checking game termination.
-                      # The default functions set here will work
-                      # for connect_four.
                       get_next_moves_fn=get_all_next_moves,
 		              is_terminal_fn=is_terminal,
                       verbose=True):
@@ -134,7 +133,8 @@ def alpha_beta_search(board, depth,
     for move, new_board in get_next_moves_fn(board):
         
         val = -1 * alpha_beta_find_board_value(
-                                            new_board, depth-1, 
+                                            new_board, 
+                                            depth-1, 
                                             invert_or_none(best_val), 
                                             eval_fn,
                                             get_next_moves_fn,
@@ -240,12 +240,12 @@ def run_test_tree_search(search, board, depth):
 ## Do you want us to use your code in a tournament against other students? See
 ## the description in the problem set. The tournament is completely optional
 ## and has no effect on your grade.
-COMPETE = (None)
+COMPETE = False
 
 ## The standard survey questions.
-HOW_MANY_HOURS_THIS_PSET_TOOK = ""
-WHAT_I_FOUND_INTERESTING = ""
-WHAT_I_FOUND_BORING = ""
-NAME = ""
-EMAIL = ""
+HOW_MANY_HOURS_THIS_PSET_TOOK = "12"
+WHAT_I_FOUND_INTERESTING = "simplifying the algorithm and fixing the bug in the tree_searcher"
+WHAT_I_FOUND_BORING = "drawing out the data structure"
+NAME = "Jacob Johnson"
+EMAIL = "jacob.errol@gmail.com"
 
