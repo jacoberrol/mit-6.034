@@ -52,24 +52,10 @@ import tree_searcher
 
 def focused_evaluate(board):
     
-    win = board.is_win()
-    tokens = board.num_tokens_on_board()
-
-    if win == board.get_current_player_id():
-        return 1000 + tokens
-    elif win == board.get_other_player_id():
-        return -1000 - tokens
-    elif board.is_tie():
-        return -1000
-    else:
-        score = board.longest_chain(board.get_current_player_id()) * 10
-        # Prefer having your pieces in the center of the board.
-        for row in range(6):
-            for col in range(7):
-                if board.get_cell(row, col) == board.get_current_player_id():
-                    score -= abs(3-col)
-                elif board.get_cell(row, col) == board.get_other_player_id():
-                    score += abs(3-col)
+    score = 0
+    score = prefer_win_fast(score,board)
+    score = prefer_long_chains(score,board)
+    score = prefer_center_pieces(score,board)    
 
     return score
 
@@ -124,8 +110,7 @@ def alpha_beta_search(board,
                       depth,
                       eval_fn,
                       get_next_moves_fn=get_all_next_moves,
-		              is_terminal_fn=is_terminal,
-                      verbose=True):
+		              is_terminal_fn=is_terminal):
     
     best_val = None
     best_move = None
@@ -143,9 +128,6 @@ def alpha_beta_search(board,
         if best_val == None or val > best_val:
             best_val = val
             best_move = move
-            
-    if verbose:
-        print("ALPHABETA: Decided on column {} with rating {}".format(best_move, best_val))
 
     return best_move
 
@@ -176,10 +158,53 @@ ab_iterative_player = lambda board: \
 ## same depth.
 
 def better_evaluate(board):
-    raise NotImplementedError
+    score = 0
+    score = prefer_win_fast(score,board)
+    score = prefer_long_chains_early(score,board)
+    score = prefer_center_pieces(score,board)
+    return score
+
+
+def prefer_win_fast(score,board):
+    win = board.is_win()
+    tokens = board.num_tokens_on_board()
+    if win == board.get_current_player_id(): 
+        score = (score + 1000 - tokens)
+    if win == board.get_other_player_id():
+        score = (score - 1000 + tokens)
+    elif board.is_tie():
+        score = (score - 1000)
+    return score
+
+def prefer_long_chains(score,board):
+    return (score + (board.longest_chain(board.get_current_player_id()) * 10))
+
+def prefer_long_chains_early(score,board):
+    tokens = board.num_tokens_on_board()
+    my_longest_chain = board.longest_chain(board.get_current_player_id())
+    opp_longest_chain = board.longest_chain(board.get_other_player_id())
+
+    if my_longest_chain > opp_longest_chain:
+        score = score + eval_chain(my_longest_chain,tokens)
+    elif opp_longest_chain > my_longest_chain:
+        score = score - eval_chain(opp_longest_chain,tokens)
+
+    return score
+
+def eval_chain(chain_length,tokens):
+    return (chain_length * chain_length * (42-tokens))
+
+def prefer_center_pieces(score,board):
+    for row in range(6):
+        for col in range(7):
+            if board.get_cell(row, col) == board.get_current_player_id():
+                score -= abs(3-col)
+            elif board.get_cell(row, col) == board.get_other_player_id():
+                score += abs(3-col)
+    return score
 
 # Comment this line after you've fully implemented better_evaluate
-better_evaluate = memoize(basic_evaluate)
+better_evaluate = memoize(better_evaluate)
 
 # Uncomment this line to make your better_evaluate run faster.
 # better_evaluate = memoize(better_evaluate)
